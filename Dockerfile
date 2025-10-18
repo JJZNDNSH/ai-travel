@@ -1,10 +1,10 @@
+
+# 使用官方 Node.js 运行时作为基础镜像
+FROM node:18-alpine AS base
 ARG SUPABASE_URL
 ARG SUPABASE_ANON_KEY
 ENV SUPABASE_URL=${SUPABASE_URL}
 ENV SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
-# 使用官方 Node.js 运行时作为基础镜像
-FROM node:18-alpine AS base
-
 # 安装依赖
 FROM base AS deps
 WORKDIR /app
