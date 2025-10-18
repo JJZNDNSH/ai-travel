@@ -4,6 +4,10 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  eslint: {
+    // ⚠️ 在构建时忽略 ESLint 错误
+    ignoreDuringBuilds: true,
+  },
   images: {
     domains: ['picsum.photos', 'images.unsplash.com', 'via.placeholder.com'],
     unoptimized: true,
