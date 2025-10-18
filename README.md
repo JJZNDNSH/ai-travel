@@ -1,6 +1,196 @@
+仓库链接：https://github.com/JJZNDNSH/ai-travel
+aliyun4Nju
+
 # AI 旅行规划应用
 
 一个基于 AI 的智能旅行规划应用，通过语音和文字输入了解用户需求，自动生成详细的旅行路线和建议，并提供实时旅行辅助。
+
+## 🚀 快速开始
+
+### 方式一：Docker 运行（推荐）
+
+```bash
+# 拉取并运行 Docker 镜像
+docker run -d \
+  --name ai-travel \
+  -p 3000:3000 \
+  -e NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co" \
+  -e NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key" \
+  -e OPENAI_API_KEY="sk-your-zhipu-api-key" \
+  -e NEXT_PUBLIC_AMAP_KEY="your-amap-api-key" \
+  registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+
+# 或者使用 docker-compose
+docker-compose up -d
+```
+
+访问 http://localhost:3000 查看应用。
+
+### 方式二：本地开发
+
+```bash
+# 克隆项目
+git clone https://github.com/your-username/ai-travel.git
+cd ai-travel
+
+# 安装依赖
+npm install
+
+# 配置环境变量
+cp env.example .env.local
+
+# 启动开发服务器
+npm run dev
+```
+
+## 📦 Docker 镜像
+
+**阿里云镜像仓库地址：**
+```
+registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+```
+
+**拉取命令：**
+```bash
+docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+```
+
+## 🔑 API 密钥配置
+
+### 智谱AI API（3个月内有效）
+```
+API Key: sk-your-zhipu-api-key-here
+```
+
+### 高德地图 API（3个月内有效）
+```
+API Key: your-amap-api-key-here
+```
+
+### 科大讯飞语音识别（3个月内有效）
+```
+App ID: your-iflytek-app-id
+API Key: your-iflytek-api-key
+API Secret: your-iflytek-api-secret
+```
+
+### Unsplash API（3个月内有效）
+```
+Access Key: your-unsplash-access-key
+```
+
+## 🚢 部署说明
+
+### 阿里云容器镜像服务配置
+
+1. **登录阿里云控制台**
+   - 访问 [阿里云容器镜像服务](https://cr.console.aliyun.com/)
+   - 创建命名空间（如：ai-travel-namespace）
+
+2. **配置GitHub Secrets**
+   在GitHub仓库设置中添加以下Secrets：
+   ```
+   ALIBABA_CLOUD_USERNAME: 你的阿里云用户名
+   ALIBABA_CLOUD_PASSWORD: 你的阿里云密码
+   ALIBABA_CLOUD_NAMESPACE: 你的命名空间名称
+   ```
+
+3. **自动部署**
+   - 推送代码到main分支会自动触发GitHub Actions
+   - 自动构建Docker镜像并推送到阿里云镜像仓库
+
+### 生产环境部署
+
+```bash
+# 1. 拉取最新镜像
+docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+
+# 2. 运行容器
+docker run -d \
+  --name ai-travel-prod \
+  -p 3000:3000 \
+  --restart unless-stopped \
+  -e NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co" \
+  -e NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key" \
+  -e OPENAI_API_KEY="sk-your-zhipu-api-key" \
+  -e NEXT_PUBLIC_AMAP_KEY="your-amap-api-key" \
+  registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+
+# 3. 查看日志
+docker logs -f ai-travel-prod
+
+# 4. 健康检查
+curl http://localhost:3000/api/health
+```
+
+## 🔧 开发指南
+
+### 本地开发环境
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/your-username/ai-travel.git
+cd ai-travel
+
+# 2. 安装依赖
+npm install
+
+# 3. 配置环境变量
+cp env.example .env.local
+
+# 4. 启动开发服务器
+npm run dev
+```
+
+### 构建和测试
+
+```bash
+# 构建项目
+npm run build
+
+# 启动生产服务器
+npm start
+
+# 运行测试
+npm test
+
+# 代码检查
+npm run lint
+```
+
+## 📝 提交记录
+
+项目包含详细的Git提交记录，展示了完整的开发过程：
+
+- **功能开发**: 每个功能模块都有独立的提交记录
+- **Bug修复**: 记录所有问题修复过程
+- **代码优化**: 性能优化和代码重构记录
+- **文档更新**: README和代码注释的更新记录
+
+查看完整提交历史：
+```bash
+git log --oneline --graph
+```
+
+## 🏗️ 项目架构
+
+```
+ai-travel/
+├── .github/workflows/     # GitHub Actions 配置
+├── app/                   # Next.js App Router
+│   ├── api/              # API 路由
+│   ├── auth/             # 认证页面
+│   ├── dashboard/        # 仪表板
+│   ├── login/            # 登录页面
+│   ├── planner/          # 旅行规划器
+│   └── plans/            # 旅行计划详情
+├── components/           # 可复用组件
+├── lib/                  # 工具库和配置
+├── public/               # 静态资源
+├── Dockerfile            # Docker 配置
+├── docker-compose.yml    # Docker Compose 配置
+└── README.md            # 项目文档
+```
 
 ## 功能特性
 

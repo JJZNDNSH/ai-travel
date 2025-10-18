@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  ai-travel:
+    image: registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+    ports:
+      - "3000:3000"
+    environment:
+      # Supabase Configuration
+      - NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+      
+      # 智谱AI API (3个月内有效)
+      - OPENAI_API_KEY=sk-your-zhipu-api-key-here
+      
+      # 高德地图 API (3个月内有效)
+      - NEXT_PUBLIC_AMAP_KEY=your-amap-api-key-here
+      
+      # 科大讯飞语音识别 (3个月内有效)
+      - NEXT_PUBLIC_IFLYTEK_APP_ID=your-iflytek-app-id
+      - NEXT_PUBLIC_IFLYTEK_API_KEY=your-iflytek-api-key
+      - NEXT_PUBLIC_IFLYTEK_API_SECRET=your-iflytek-api-secret
+      
+      # Unsplash API (3个月内有效)
+      - NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your-unsplash-access-key
+      
+      # 生产环境配置
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
