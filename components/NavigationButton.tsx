@@ -11,9 +11,10 @@ interface NavigationButtonProps {
 export default function NavigationButton({ location, activity, className = '' }: NavigationButtonProps) {
   const handleNavigation = async () => {
     try {
-      // ✅ 1. 获取用户当前位置
+      // ✅ 1. 获取当前位置（虚拟机或非 https 环境会失败）
       const fromLocation = await new Promise<{ lat: number; lon: number } | null>((resolve) => {
         if (!navigator.geolocation) {
+          console.warn('浏览器不支持地理定位')
           resolve(null)
           return
         }
@@ -33,16 +34,18 @@ export default function NavigationButton({ location, activity, className = '' }:
         )
       })
 
-      // ✅ 2. 使用高德地理编码 API 获取目标景点的经纬度
+      // ✅ 2. 通过高德 API 获取目的地坐标
       const apiKey = process.env.NEXT_PUBLIC_AMAP_KEY
-      console.log(apiKey)
       const geoUrl = `https://restapi.amap.com/v3/geocode/geo?address=${encodeURIComponent(location)}&key=${apiKey}`
 
       const geoRes = await fetch(geoUrl)
       const geoData = await geoRes.json()
 
+      // ❗ 如果找不到目的地，则直接打开高德地图主页
       if (!geoData.geocodes?.length) {
-        throw new Error('未找到目的地位置')
+        console.warn('未找到目的地位置，打开高德地图主页')
+        window.open('https://www.amap.com/', '_blank')
+        return
       }
 
       const [lon, lat] = geoData.geocodes[0].location.split(',')
@@ -64,9 +67,10 @@ export default function NavigationButton({ location, activity, className = '' }:
         iframe.src = appScheme
         document.body.appendChild(iframe)
 
-        // 如果2秒内没打开App，就回退到网页导航
+        // 如果2秒内没打开App，就回退到网页版
         setTimeout(() => {
           document.body.removeChild(iframe)
+
           let webUrl = `https://uri.amap.com/navigation?to=${lon},${lat},${encodeURIComponent(destName)}&mode=car&policy=1`
           if (fromLocation) {
             webUrl = `https://uri.amap.com/navigation?from=${fromLocation.lon},${fromLocation.lat},我的位置&to=${lon},${lat},${encodeURIComponent(destName)}&mode=car&policy=1`
@@ -74,16 +78,20 @@ export default function NavigationButton({ location, activity, className = '' }:
           window.open(webUrl, '_blank')
         }, 2000)
       } else {
-        // PC端：直接打开网页版
-        let webUrl = `https://uri.amap.com/navigation?to=${lon},${lat},${encodeURIComponent(destName)}&mode=car&policy=1`
-        if (fromLocation) {
-          webUrl = `https://uri.amap.com/navigation?from=${fromLocation.lon},${fromLocation.lat},我的位置&to=${lon},${lat},${encodeURIComponent(destName)}&mode=car&policy=1`
+        // PC端：如果无法获取当前位置，则直接打开高德地图主页
+        if (!fromLocation) {
+          console.warn('未获取到当前位置，打开高德地图主页')
+          window.open('https://www.amap.com/', '_blank')
+          return
         }
+
+        // 正常情况：PC端导航
+        let webUrl = `https://uri.amap.com/navigation?from=${fromLocation.lon},${fromLocation.lat},我的位置&to=${lon},${lat},${encodeURIComponent(destName)}&mode=car&policy=1`
         window.open(webUrl, '_blank')
       }
     } catch (error) {
       console.error('导航失败:', error)
-      alert('导航失败，请重试')
+      window.open('https://www.amap.com/', '_blank')
     }
   }
 

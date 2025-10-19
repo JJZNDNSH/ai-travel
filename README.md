@@ -1,5 +1,5 @@
 仓库链接：https://github.com/JJZNDNSH/ai-travel
-aliyun4Nju
+
 
 # AI 旅行规划应用
 
@@ -7,10 +7,15 @@ aliyun4Nju
 
 ## 🚀 快速开始
 
-### 方式一：Docker 运行（推荐）
+### 方式一：Docker 运行
+
+
+# 1. 拉取最新镜像
+docker pull crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel
+
 
 ```bash
-# 拉取并运行 Docker 镜像
+# 2.拉取并运行 Docker 镜像
 docker run -d \
   --name ai-travel \
   -p 3000:3000 \
@@ -18,19 +23,23 @@ docker run -d \
   -e NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key" \
   -e OPENAI_API_KEY="sk-your-zhipu-api-key" \
   -e NEXT_PUBLIC_AMAP_KEY="your-amap-api-key" \
-  registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+  crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel:latest
 
-# 或者使用 docker-compose
-docker-compose up -d
+# 3. 查看日志
+docker logs -f ai-travel-prod
+
+
+
+验证：用该方式在虚拟机上运行时，宿主机访问时无法使用浏览器自带的语音功能和定位功能（如果要使用这些功能需要用https访问），因此须在本地运行该镜像（浏览器安全规则）
 ```
 
-访问 http://localhost:3000 查看应用。
+访问 http://localhost:3000/login 查看应用。
 
 ### 方式二：本地开发
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/ai-travel.git
+git clone https://github.com/JJZNDNSH/ai-travel.git
 cd ai-travel
 
 # 安装依赖
@@ -47,12 +56,12 @@ npm run dev
 
 **阿里云镜像仓库地址：**
 ```
-registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel
 ```
 
 **拉取命令：**
 ```bash
-docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+docker pull crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel
 ```
 
 ## 🔑 API 密钥配置
@@ -67,17 +76,9 @@ API Key: sk-your-zhipu-api-key-here
 API Key: your-amap-api-key-here
 ```
 
-### 科大讯飞语音识别（3个月内有效）
-```
-App ID: your-iflytek-app-id
-API Key: your-iflytek-api-key
-API Secret: your-iflytek-api-secret
-```
+supbase创建表格在下面
 
-### Unsplash API（3个月内有效）
-```
-Access Key: your-unsplash-access-key
-```
+
 
 ## 🚢 部署说明
 
@@ -103,7 +104,7 @@ Access Key: your-unsplash-access-key
 
 ```bash
 # 1. 拉取最新镜像
-docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+docker pull crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel
 
 # 2. 运行容器
 docker run -d \
@@ -114,7 +115,7 @@ docker run -d \
   -e NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key" \
   -e OPENAI_API_KEY="sk-your-zhipu-api-key" \
   -e NEXT_PUBLIC_AMAP_KEY="your-amap-api-key" \
-  registry.cn-hangzhou.aliyuncs.com/your-namespace/ai-travel:latest
+  crpi-ppzaquo8yzy4dm4g.cn-hangzhou.personal.cr.aliyuncs.com/jjzndnsh/ai-travel
 
 # 3. 查看日志
 docker logs -f ai-travel-prod
@@ -203,7 +204,6 @@ ai-travel/
 - **语音识别**: 基于浏览器原生 Web Speech API 实现语音输入功能
 - **智能解析**: 使用智谱大模型解析语音内容，自动填充表单字段
 - **地图展示**: 集成高德地图 API，展示旅行路线和景点位置
-- **美景图片**: 集成 Unsplash API，展示目的地和景点的精美图片
 - **AI 规划**: 集成智谱大模型 API 进行智能行程规划
 - **实时同步**: 基于 Supabase 的云端数据同步
 
@@ -254,23 +254,12 @@ OPENAI_API_KEY=your_openai_api_key
 NEXT_PUBLIC_BAIDU_MAP_AK=your_baidu_map_key
 NEXT_PUBLIC_AMAP_KEY=your_amap_key
 
-# 科大讯飞语音识别
-NEXT_PUBLIC_IFLYTEK_APP_ID=your_iflytek_app_id
-NEXT_PUBLIC_IFLYTEK_API_KEY=your_iflytek_api_key
-NEXT_PUBLIC_IFLYTEK_API_SECRET=your_iflytek_api_secret
 
-# Unsplash API for scenic photos (可选)
-NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+
+
 ```
 
-### 4. 设置科大讯飞语音识别（可选）
 
-1. 访问 [科大讯飞开放平台](https://www.xfyun.cn/)
-2. 注册账号并创建应用
-3. 获取 AppID、API Key 和 API Secret
-4. 在 `.env.local` 中配置相关参数
-
-**注意**: 如果不配置科大讯飞，应用会使用浏览器原生的语音识别功能。
 
 ### 5. 设置高德地图（可选）
 
@@ -281,14 +270,7 @@ NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
 
 **注意**: 如果不配置高德地图，地图功能将不可用。
 
-### 6. 设置 Unsplash API（可选）
 
-1. 访问 [Unsplash Developers](https://unsplash.com/developers)
-2. 注册账号并创建应用
-3. 获取 Access Key
-4. 在 `.env.local` 中配置 `NEXT_PUBLIC_UNSPLASH_ACCESS_KEY`
-
-**注意**: 如果不配置 Unsplash API，将使用占位图片。
 
 ### 7. 设置 Supabase
 
@@ -387,7 +369,7 @@ CREATE TRIGGER update_travel_plans_updated_at BEFORE UPDATE
 npm run dev
 ```
 
-访问 [http://localhost:3000](http://localhost:3000) 查看应用。
+访问 [http://localhost:3000/login](http://localhost:3000/login) 查看应用。
 
 ## 项目结构
 
